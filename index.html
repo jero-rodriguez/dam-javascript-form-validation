@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Pedido Elegante</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            padding-top: 50px;
+            color: #333;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-top: 0;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .campo {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        select,
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        select:focus,
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #db3434;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+        }
+
+        .img-container {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        img {
+            border-radius: 8px;
+            border: 1px solid #eee;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        button {
+            width: 100%;
+            background-color: #3498db;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        #mensajeError {
+            color: #e74c3c;
+            font-size: 18px;
+            text-align: center;
+            margin-top: 20px;
+            min-height: 1.2em;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-weight: normal;
+        }
+
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        #mensajeError {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            min-height: 40px;
+            transition: all 0.3s ease;
+        }
+
+        .con-error {
+            background-color: #fce4e4;
+            border: 1px solid #e74c3c;
+            color: #e74c3c;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Pedido</h2>
+
+        <form id="formPedido" onsubmit="return validar(event)">
+
+            <div class="campo">
+                <label for="producto">Producto:</label>
+                <select id="producto" onchange="actualizarImagen(this.value)">
+                    <option value="">Elija producto</option>
+                    <option value="ordenador">Ordenador</option>
+                    <option value="portatil">Portátil</option>
+                    <option value="tablet">Tablet</option>
+                </select>
+
+                <div class="img-container">
+                    <img id="imgVisual" src="https://placehold.co/200x200?text=Selecciona+un+producto" alt="Producto"
+                        width="200" height="200">
+                </div>
+            </div>
+
+            <div class="campo">
+                <label for="usuario">Nombre de Usuario:</label>
+                <input type="text" id="usuario" placeholder="Ej: JuanPerez">
+            </div>
+
+            <div class="campo">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="acepto"> He leído y acepto las condiciones
+                </label>
+            </div>
+
+            <button type="submit">Finalizar Pedido</button>
+        </form>
+
+        <h3 id="mensajeError" class="error-style"></h3>
+    </div>
+
+    <script>
+        function actualizarImagen(valor) {
+            const img = document.getElementById('imgVisual');
+
+            const imagenes = {
+                "ordenador": "https://images.unsplash.com/photo-1547082299-de196ea013d6?w=200&h=200&fit=crop",
+                "portatil": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=200&h=200&fit=crop",
+                "tablet": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=200&h=200&fit=crop"
+            };
+
+            img.src = imagenes[valor] || "https://placehold.co/200x200?text=Selecciona+un+producto";
+        }
+
+        function validar(event) {
+            event.preventDefault();
+
+            const prod = document.getElementById('producto');
+            const user = document.getElementById('usuario');
+            const check = document.getElementById('acepto');
+            const errorH3 = document.getElementById('mensajeError');
+
+            errorH3.innerHTML = "";
+
+            if (prod.value === "") {
+                console.log("Producto no seleccionado");
+                errorH3.innerHTML = "Por favor, <b>elija un producto</b>.";
+                errorH3.classList.add('con-error');
+                prod.focus();
+                return false;
+            }
+
+            if (user.value.length < 5) {
+                console.log("Usuario demasiado corto");
+                errorH3.innerHTML = "Usuario demasiado corto (mín. 5 letras).";
+                errorH3.classList.add('con-error');
+                user.focus();
+                return false;
+            }
+
+            if (!check.checked) {
+                console.log("Condiciones no aceptadas");
+                errorH3.innerHTML = "Debe <u>aceptar las condiciones</u>.";
+                errorH3.classList.add('con-error');
+                check.focus();
+                return false;
+            }
+
+            errorH3.style.color = "green";
+            errorH3.innerHTML = "¡Pedido procesado correctamente!";
+            errorH3.style.backgroundColor = "#e8f5e9";
+            errorH3.style.border = "1px solid green";
+            return true;
+        }
+    </script>
+
+</body>
+
+</html>
